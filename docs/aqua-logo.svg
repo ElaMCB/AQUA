@@ -1,39 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96" role="img" aria-label="A.Q.U.A - AI Quality and Uncertainty Architect">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96">
   <defs>
-    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#cffafe"/>
-      <stop offset="30%" stop-color="#22d3ee"/>
-      <stop offset="70%" stop-color="#0891b2"/>
+    <linearGradient id="w" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ecfeff"/>
+      <stop offset="45%" stop-color="#22d3ee"/>
       <stop offset="100%" stop-color="#0e7490"/>
     </linearGradient>
-    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
-      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    <filter id="letter-glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#22d3ee" flood-opacity="0.35"/>
-    </filter>
   </defs>
-
-  <g filter="url(#letter-glow)" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="800" font-size="56" text-anchor="middle">
-    <text x="62" y="58" fill="url(#water)">A</text>
-    <text x="62" y="58" fill="url(#shine)" opacity="0.4">A</text>
-
-    <text x="166" y="58" fill="url(#water)">Q</text>
-    <text x="166" y="58" fill="url(#shine)" opacity="0.4">Q</text>
-
-    <text x="270" y="58" fill="url(#water)">U</text>
-    <text x="270" y="58" fill="url(#shine)" opacity="0.4">U</text>
-
-    <text x="374" y="58" fill="url(#water)">A</text>
-    <text x="374" y="58" fill="url(#shine)" opacity="0.4">A</text>
+  <!-- Path outlines only: GitHub strips SVG text and filters -->
+  <g fill="url(#w)">
+    <path d="M38 72 L56 18 L74 72 M46 52 H66 Z"/>
+    <path d="M142 72 V38 H168 Q188 38 188 54 Q188 68 172 72 H142 M152 48 H168 Q176 48 176 54 Q176 60 168 60 H152 Z"/>
+    <path d="M246 72 V18 H296 V30 H262 V38 H290 V50 H262 V60 H298 V72 Z"/>
+    <path d="M350 72 L368 18 L386 72 M358 52 H378 Z"/>
   </g>
-
-  <circle cx="114" cy="46" r="3.5" fill="#22d3ee"/>
-  <circle cx="218" cy="46" r="3.5" fill="#22d3ee"/>
-  <circle cx="322" cy="46" r="3.5" fill="#22d3ee"/>
-
-  <text x="240" y="86" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0891b2" letter-spacing="0.08em">
-    AI Quality and Uncertainty Architect
-  </text>
+  <circle cx="108" cy="44" r="3.5" fill="#22d3ee"/>
+  <circle cx="216" cy="44" r="3.5" fill="#22d3ee"/>
+  <circle cx="324" cy="44" r="3.5" fill="#22d3ee"/>
 </svg>

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/aqua-logo.svg" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="420">
+  <img src="docs/aqua-logo.png" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="420">
 </p>
 
 <p align="center">
