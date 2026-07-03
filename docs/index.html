@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.Q.U.A — AI Quality and Uncertainty Architect</title>
+  <meta name="description" content="Autonomous testing with explicit uncertainty. AI that explains why it tests, not just what it found.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a1628;
+      --bg-elevated: #0f1f38;
+      --surface: #132743;
+      --border: #1e3a5f;
+      --text: #e8f4fc;
+      --text-muted: #8fb4d4;
+      --accent: #38bdf8;
+      --accent-dim: #0ea5e9;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --orange: #f59e0b;
+      --green: #34d399;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 1.05rem;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(14, 165, 233, 0.08), transparent);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      margin-left: 0.35em;
+      background: linear-gradient(135deg, #7dd3fc, #38bdf8, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 0.75rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .badges img { height: 22px; }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--text);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    .tagline strong { color: var(--accent); }
+
+    /* Sections */
+    section {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type { border-bottom: none; }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 1.75rem 0 0.75rem;
+      color: var(--text);
+    }
+
+    p { margin-bottom: 1rem; }
+
+    ul { margin: 0 0 1rem 1.25rem; }
+    li { margin-bottom: 0.4rem; }
+
+    strong { color: #fff; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .highlight {
+      background: var(--accent-glow);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.25rem 0;
+    }
+
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+
+    .status {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-progress { background: rgba(245, 158, 11, 0.2); color: var(--orange); }
+    .status-planned { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+    .status-future { background: rgba(143, 180, 212, 0.15); color: var(--text-muted); }
+
+    /* Code blocks */
+    pre {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.88em;
+      background: var(--surface);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .diagram {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      line-height: 1.35;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 3rem 0 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .footer p { margin-bottom: 0.75rem; }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-style: normal;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .github-link:hover {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <h1>A.Q.U.A</h1>
+      <p class="subtitle">AQUA — AI Quality and Uncertainty Architect</p>
+      <div class="badges">
+        <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+        <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+">
+        <img src="https://img.shields.io/badge/status-alpha-orange.svg" alt="Status: Alpha">
+        <img src="https://img.shields.io/badge/docker-required-blue.svg" alt="Docker required">
+      </div>
+      <p class="tagline">
+        <strong>Autonomous testing with explicit uncertainty.</strong><br>
+        AI that explains <em>why</em> it tests, not just <em>what</em> it found.
+      </p>
+      <a class="github-link" href="https://github.com/ElaMCB/AQUA">View on GitHub →</a>
+    </header>
+
+    <section>
+      <h2>The Problem</h2>
+      <p>Current AI testing tools promise autonomy but deliver black boxes:</p>
+      <ul>
+        <li><strong>They generate tests</strong> — but can't explain <em>why</em> these scenarios matter</li>
+        <li><strong>They report failures</strong> — but hide their confidence in the diagnosis</li>
+        <li><strong>They suggest fixes</strong> — but auto-merge without accountability</li>
+      </ul>
+      <p>In regulated environments, this isn't autonomy. It's liability dressed as innovation.</p>
+      <p class="highlight"><strong>A.Q.U.A is different.</strong></p>
+    </section>
+
+    <section>
+      <h2>What A.Q.U.A Does</h2>
+      <p>A.Q.U.A is an autonomous AI testing engine built on a single principle: <strong>every decision carries uncertainty, and that uncertainty must be visible, auditable, and actionable.</strong></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Capability</th><th>What It Means</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Causal Scenario Generation</strong></td>
+              <td>Traces code changes through impact graphs to generate targeted test scenarios — with explicit rationale for each</td>
+            </tr>
+            <tr>
+              <td><strong>Uncertainty-Quantified Execution</strong></td>
+              <td>Runs tests in isolated sandboxes and reports results with confidence intervals, not just pass/fail</td>
+            </tr>
+            <tr>
+              <td><strong>Explainable Root Cause Analysis</strong></td>
+              <td>Diagnoses failures with alternative hypotheses ranked by probability — never a single "AI said so" answer</td>
+            </tr>
+            <tr>
+              <td><strong>Recommendation Engine</strong></td>
+              <td>Suggests fixes with risk assessment, but <strong>never auto-merges</strong> — human judgment is the final gate</td>
+            </tr>
+            <tr>
+              <td><strong>Production Validation</strong></td>
+              <td>Validates test effectiveness against real-world traffic shadows, catching model drift and performance degradation post-deployment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Architecture</h2>
+      <pre class="diagram"><code>┌─────────────────────────────────────────────────────────────┐
+│                    A.Q.U.A ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │
+│  │   INGEST    │───→│   REASON    │───→│   EXECUTE   │    │
+│  │             │    │             │    │             │    │
+│  │ • Git diffs │    │ • Causal    │    │ • Sandbox   │    │
+│  │ • Code AST  │    │   impact    │    │   orchestra-│   │
+│  │ • API specs │    │   analysis  │    │   tion      │    │
+│  │ • Runtime   │    │ • Scenario  │    │ • Parallel  │    │
+│  │   telemetry │    │   generation│    │   execution │    │
+│  │ • Historical│    │ • Uncertainty│   │ • Trace     │    │
+│  │   failures  │    │   modeling  │    │   collection│    │
+│  └─────────────┘    └─────────────┘    └─────────────┘    │
+│         │                  │                  │            │
+│         └──────────────────┼──────────────────┘            │
+│                            ↓                                │
+│                   ┌─────────────┐                           │
+│                   │   EXPLAIN   │                           │
+│                   │             │                           │
+│                   │ • Confidence│                           │
+│                   │   scores per│                           │
+│                   │   scenario  │                           │
+│                   │ • Alternative│                          │
+│                   │   hypotheses│                           │
+│                   │ • Decision  │                           │
+│                   │   trails    │                           │
+│                   └─────────────┘                           │
+│                            ↓                                │
+│                   ┌─────────────┐                           │
+│                   │   CONNECT   │                           │
+│                   │             │                           │
+│                   │ • Shadow    │                           │
+│                   │   integration│                          │
+│                   │ • Manager   │                           │
+│                   │   briefs      │                           │
+│                   │ • Stakeholder│                          │
+│                   │   dashboards  │                           │
+│                   └─────────────┘                           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+    </section>
+
+    <section>
+      <h2>Core Principles</h2>
+
+      <h3>1. Uncertainty Is a Feature, Not a Bug</h3>
+      <p>Every A.Q.U.A output includes explicit uncertainty quantification:</p>
+      <pre><code>{
+  "scenario": "Expired coupon rejection at checkout",
+  "confidence": 0.87,
+  "rationale": "Payment validation refactor removed explicit expiry check; historical pattern shows 73% of similar changes introduced coupon bypass",
+  "alternative_hypotheses": [
+    {
+      "description": "Coupon service timeout causes silent failure",
+      "probability": 0.09,
+      "evidence": "No timeout handling in new async path"
+    },
+    {
+      "description": "Currency conversion masks coupon value",
+      "probability": 0.04,
+      "evidence": "Unrelated change in conversion layer"
+    }
+  ],
+  "recommended_action": "Add explicit expiry assertion before payment processing"
+}</code></pre>
+
+      <h3>2. Human-in-the-Loop by Design</h3>
+      <p>A.Q.U.A recommends. Humans decide.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>A.Q.U.A Action</th><th>Human Gate</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Generate scenario</td><td>Review and approve test plan</td></tr>
+            <tr><td>Identify failure</td><td>Review diagnosis and alternatives</td></tr>
+            <tr><td>Suggest fix</td><td>Edit, validate, and merge</td></tr>
+            <tr><td>Flag production drift</td><td>Review trend and authorize response</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3. Production Truth Over Synthetic Confidence</h3>
+      <p>Tests pass in sandboxes. Reality happens in production. A.Q.U.A's Production Validation Framework continuously validates test effectiveness against real traffic:</p>
+      <ul>
+        <li><strong>Model drift detection:</strong> Are test scenarios still relevant as the codebase evolves?</li>
+        <li><strong>Performance degradation tracking:</strong> Do previously-passing tests now mask real slowdowns?</li>
+        <li><strong>Real-world effectiveness:</strong> Did a test that passed in sandbox actually prevent a production bug?</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Quick Start</h2>
+      <div class="callout">
+        <strong>Naming:</strong> The product is <strong>A.Q.U.A</strong>. The repo, package, and CLI use <strong>AQUA</strong> / <code>aqua</code> — same project, different surfaces.
+      </div>
+
+      <h3>Prerequisites</h3>
+      <ul>
+        <li>Python 3.11+</li>
+        <li>Docker (for sandbox execution)</li>
+        <li>Git</li>
+      </ul>
+
+      <h3>Installation</h3>
+      <pre><code>git clone https://github.com/ElaMCB/AQUA.git
+cd AQUA
+pip install -r requirements.txt</code></pre>
+
+      <h3>Configure</h3>
+      <pre><code>cp .env.example .env
+# Edit .env:
+# OPENAI_API_KEY=sk-...          # For LLM reasoning
+# ANTHROPIC_API_KEY=sk-...       # Alternative LLM
+# LOCAL_LLM_URL=http://...       # Ollama/vLLM for private inference
+# AZDO_PAT=...                   # Azure DevOps integration</code></pre>
+
+      <h3>Run Your First Analysis</h3>
+      <pre><code># Analyze a PR and generate uncertainty-quantified test scenarios
+python -m aqua analyze \
+  --repo /path/to/your/code \
+  --pr 42 \
+  --output aqua-report.json
+
+# Review the report
+cat aqua-report.json | python -m aqua render --format markdown</code></pre>
+
+      <h3>Execute Tests</h3>
+      <pre><code># Run generated scenarios in isolated sandboxes
+python -m aqua execute \
+  --scenarios aqua-report.json \
+  --parallel 10 \
+  --output results/
+
+# Review results with confidence scores
+python -m aqua report --results results/</code></pre>
+    </section>
+
+    <section>
+      <h2>Integration with Shadow</h2>
+      <p>A.Q.U.A feeds Shadow (Hyper-Agent), creating the only platform that connects autonomous testing to leadership decision-making:</p>
+      <pre><code># shadow/config.yaml
+integrations:
+  aqua:                            # lowercase key — AQUA service identifier
+    enabled: true
+    endpoint: http://localhost:8000
+    include_in_brief: true
+    alert_threshold: 0.75        # Flag scenarios with confidence &lt; 75%</code></pre>
+      <p>Shadow's morning brief then includes:</p>
+      <ul>
+        <li>Overnight A.Q.U.A test results with confidence scores</li>
+        <li>Scenarios requiring manager attention (low confidence, high impact)</li>
+        <li>Production drift alerts</li>
+        <li>Recommended actions with full decision trails</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Roadmap</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>Focus</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Alpha</td>
+              <td>Causal graph construction, scenario generation, basic sandbox execution</td>
+              <td><span class="status status-progress">In progress</span></td>
+            </tr>
+            <tr>
+              <td>Beta</td>
+              <td>Uncertainty quantification, alternative hypothesis ranking, Shadow integration</td>
+              <td><span class="status status-planned">Planned</span></td>
+            </tr>
+            <tr>
+              <td>v1.0</td>
+              <td>Production validation framework, full audit trails, enterprise governance</td>
+              <td><span class="status status-planned">Planned</span></td>
+            </tr>
+            <tr>
+              <td>v2.0</td>
+              <td>Multi-repo causal graphs, cross-service impact analysis, predictive drift modeling</td>
+              <td><span class="status status-future">Future</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Why A.Q.U.A Exists</h2>
+      <p>Jina proved autonomous AI testing is possible. A.Q.U.A proves it can be trustworthy.</p>
+      <ul>
+        <li><strong>For engineers:</strong> A.Q.U.A generates better scenarios because it explains its reasoning</li>
+        <li><strong>For managers:</strong> A.Q.U.A integrates with Shadow to turn test results into leadership intelligence</li>
+        <li><strong>For compliance:</strong> A.Q.U.A provides full audit trails — every decision, every confidence score, every alternative considered</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>License</h2>
+      <p>MIT — see <a href="https://github.com/ElaMCB/AQUA/blob/main/LICENSE">LICENSE</a> on GitHub.</p>
+    </section>
+
+    <footer class="footer">
+      <p>"The measure of intelligence is the ability to change." — Albert Einstein</p>
+      <p>"The measure of trustworthy AI is the ability to say 'I'm not sure.'" — A.Q.U.A</p>
+    </footer>
+  </div>
+</body>
+</html>
