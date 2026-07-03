@@ -1,5 +1,8 @@
-<h1 align="center"><strong>A.Q.U.A</strong></h1>
-<p align="center"><em>AQUA — AI Quality and Uncertainty Architect</em></p>
+<p align="center">
+  <a href="https://elamcb.github.io/AQUA/">
+    <img src="docs/aqua-logo.svg" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="540">
+  </a>
+</p>
 
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
@@ -10,8 +13,6 @@
 
 <p align="center"><strong>Autonomous testing with explicit uncertainty.</strong><br>
 AI that explains <em>why</em> it tests, not just <em>what</em> it found.</p>
-
-<p align="center"><a href="https://elamcb.github.io/AQUA/"><strong>A.Q.U.A</strong></a></p>
 
 ---
 
