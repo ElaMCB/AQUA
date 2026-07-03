@@ -1,61 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 130" role="img" aria-label="A.Q.U.A  AI Quality and Uncertainty Architect">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96" role="img" aria-label="A.Q.U.A - AI Quality and Uncertainty Architect">
   <defs>
     <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ecfeff"/>
-      <stop offset="18%" stop-color="#a5f3fc"/>
-      <stop offset="42%" stop-color="#22d3ee"/>
-      <stop offset="68%" stop-color="#0891b2"/>
-      <stop offset="100%" stop-color="#155e75"/>
+      <stop offset="0%" stop-color="#cffafe"/>
+      <stop offset="30%" stop-color="#22d3ee"/>
+      <stop offset="70%" stop-color="#0891b2"/>
+      <stop offset="100%" stop-color="#0e7490"/>
     </linearGradient>
     <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
-      <stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="45%" r="50%">
-      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="soft-glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="letter-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#22d3ee" flood-opacity="0.35"/>
     </filter>
   </defs>
 
-  <!-- Ocean tile -->
-  <rect width="540" height="130" rx="16" fill="#041018"/>
-  <rect x="0.5" y="0.5" width="539" height="129" rx="15.5" fill="none" stroke="#1e3a5f" stroke-opacity="0.45"/>
+  <g filter="url(#letter-glow)" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-weight="800" font-size="56" text-anchor="middle">
+    <text x="62" y="58" fill="url(#water)">A</text>
+    <text x="62" y="58" fill="url(#shine)" opacity="0.4">A</text>
 
-  <!-- Ambient glow -->
-  <ellipse cx="270" cy="58" rx="200" ry="52" fill="url(#glow)"/>
+    <text x="166" y="58" fill="url(#water)">Q</text>
+    <text x="166" y="58" fill="url(#shine)" opacity="0.4">Q</text>
 
-  <!-- Water letters with glow -->
-  <g filter="url(#soft-glow)" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="800" font-size="64" text-anchor="middle">
-    <text x="108" y="78" fill="url(#water)">A</text>
-    <text x="108" y="78" fill="url(#shine)" opacity="0.35">A</text>
+    <text x="270" y="58" fill="url(#water)">U</text>
+    <text x="270" y="58" fill="url(#shine)" opacity="0.4">U</text>
 
-    <text x="222" y="78" fill="url(#water)">Q</text>
-    <text x="222" y="78" fill="url(#shine)" opacity="0.35">Q</text>
-
-    <text x="336" y="78" fill="url(#water)">U</text>
-    <text x="336" y="78" fill="url(#shine)" opacity="0.35">U</text>
-
-    <text x="450" y="78" fill="url(#water)">A</text>
-    <text x="450" y="78" fill="url(#shine)" opacity="0.35">A</text>
+    <text x="374" y="58" fill="url(#water)">A</text>
+    <text x="374" y="58" fill="url(#shine)" opacity="0.4">A</text>
   </g>
 
-  <!-- Droplet separators -->
-  <circle cx="165" cy="66" r="4.5" fill="#22d3ee" opacity="0.9"/>
-  <circle cx="165" cy="66" r="7" fill="#22d3ee" opacity="0.2"/>
-  <circle cx="279" cy="66" r="4.5" fill="#22d3ee" opacity="0.9"/>
-  <circle cx="279" cy="66" r="7" fill="#22d3ee" opacity="0.2"/>
-  <circle cx="393" cy="66" r="4.5" fill="#22d3ee" opacity="0.9"/>
-  <circle cx="393" cy="66" r="7" fill="#22d3ee" opacity="0.2"/>
+  <circle cx="114" cy="46" r="3.5" fill="#22d3ee"/>
+  <circle cx="218" cy="46" r="3.5" fill="#22d3ee"/>
+  <circle cx="322" cy="46" r="3.5" fill="#22d3ee"/>
 
-  <!-- Subtitle -->
-  <text x="270" y="112" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="14" fill="#7eb8d4" letter-spacing="0.06em">
+  <text x="240" y="86" text-anchor="middle" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="500" fill="#0891b2" letter-spacing="0.08em">
     AI Quality and Uncertainty Architect
   </text>
 </svg>

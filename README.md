@@ -1,7 +1,9 @@
 <p align="center">
-  <a href="https://elamcb.github.io/AQUA/">
-    <img src="docs/aqua-logo.svg" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="540">
-  </a>
+  <img src="docs/aqua-logo.svg" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="420">
+</p>
+
+<p align="center">
+  <a href="https://elamcb.github.io/AQUA/"><img src="https://img.shields.io/badge/A.Q.U.A-site-0891b2?style=for-the-badge" alt="A.Q.U.A site"></a>
 </p>
 
 <p align="center">
