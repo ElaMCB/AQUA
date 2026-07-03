@@ -97,9 +97,29 @@ A.Q.U.A is an autonomous AI testing engine built on a single principle: **every 
 
 ## Core Principles
 
-### 1. Uncertainty Is a Feature, Not a Bug
+Three rules that govern every A.Q.U.A decision — from scenario generation to production validation.
 
-Every A.Q.U.A output includes explicit uncertainty quantification:
+| | Principle | In one line |
+|:---:|-----------|-------------|
+| **01** | **Uncertainty Is a Feature** | Every output includes confidence, rationale, and ranked alternatives |
+| **02** | **Human-in-the-Loop** | A.Q.U.A recommends. Humans decide. |
+| **03** | **Production Truth** | Sandboxes lie. Shadow traffic tells the truth. |
+
+---
+
+### 01 · Uncertainty Is a Feature, Not a Bug
+
+Every output ships with confidence, rationale, and ranked alternatives — never a single "AI said so."
+
+**Example** — `87%` confidence on *Expired coupon rejection at checkout*:
+
+| Alternative | Probability |
+|-------------|-------------|
+| Coupon service timeout causes silent failure | 9% |
+| Currency conversion masks coupon value | 4% |
+
+<details>
+<summary>Full JSON output</summary>
 
 ```json
 {
@@ -122,24 +142,32 @@ Every A.Q.U.A output includes explicit uncertainty quantification:
 }
 ```
 
-### 2. Human-in-the-Loop by Design
+</details>
 
-A.Q.U.A recommends. Humans decide.
+---
 
-| A.Q.U.A Action | Human Gate |
-|----------------|------------|
-| Generate scenario | Review and approve test plan |
-| Identify failure | Review diagnosis and alternatives |
-| Suggest fix | Edit, validate, and merge |
-| Flag production drift | Review trend and authorize response |
+### 02 · Human-in-the-Loop by Design
 
-### 3. Production Truth Over Synthetic Confidence
+A.Q.U.A recommends. Humans decide. Autonomy stops at the merge button.
 
-Tests pass in sandboxes. Reality happens in production. A.Q.U.A's Production Validation Framework continuously validates test effectiveness against real traffic:
+| A.Q.U.A | → | Human gate |
+|---------|---|------------|
+| Generate scenario | → | Review and approve test plan |
+| Identify failure | → | Review diagnosis and alternatives |
+| Suggest fix | → | Edit, validate, and merge |
+| Flag production drift | → | Review trend and authorize response |
 
-- **Model drift detection:** Are test scenarios still relevant as the codebase evolves?
-- **Performance degradation tracking:** Do previously-passing tests now mask real slowdowns?
-- **Real-world effectiveness:** Did a test that passed in sandbox actually prevent a production bug?
+---
+
+### 03 · Production Truth Over Synthetic Confidence
+
+Tests pass in sandboxes. Reality happens in production. A.Q.U.A validates test effectiveness against real traffic.
+
+| Track | What it catches |
+|-------|-----------------|
+| **Model drift detection** | Scenarios that no longer match the codebase — stale tests creating false confidence |
+| **Performance degradation** | Passing tests that mask real slowdowns users feel in production |
+| **Real-world effectiveness** | Sandbox passes that never correlated with preventing actual production bugs |
 
 ---
 
