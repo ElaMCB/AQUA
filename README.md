@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="docs/aqua-logo.png" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="420">
+  <a href="https://elamcb.github.io/AQUA/">
+    <img src="docs/aqua-logo.png" alt="A.Q.U.A — AI Quality and Uncertainty Architect" width="420">
+  </a>
 </p>
 
 <p align="center">
