@@ -234,9 +234,11 @@ Shadow's morning brief then includes:
 
 ---
 
-## Why A.Q.U.A Exists
+## Purpose
 
-Jina proved autonomous AI testing is possible. A.Q.U.A proves it can be trustworthy.
+Autonomous AI can generate tests, diagnose failures, and suggest fixes — but most tools hide how confident they are. In production and regulated environments, a black-box pass/fail is not enough.
+
+A.Q.U.A exists to make **uncertainty visible**: every scenario, diagnosis, and recommendation ships with rationale, confidence, and alternatives — so humans stay in control.
 
 - **For engineers:** A.Q.U.A generates better scenarios because it explains its reasoning
 - **For managers:** A.Q.U.A integrates with Shadow to turn test results into leadership intelligence
