@@ -7,71 +7,210 @@
   <meta name="description" content="Autonomous testing with explicit uncertainty. AI that explains why it tests, not just what it found.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a1628;
-      --bg-elevated: #0f1f38;
-      --surface: #132743;
-      --border: #1e3a5f;
-      --text: #e8f4fc;
-      --text-muted: #8fb4d4;
-      --accent: #38bdf8;
-      --accent-dim: #0ea5e9;
-      --accent-glow: rgba(56, 189, 248, 0.15);
+      --deep: #041018;
+      --ocean: #0a2540;
+      --surface: rgba(12, 45, 72, 0.55);
+      --surface-solid: #0c2d48;
+      --border: rgba(56, 189, 248, 0.18);
+      --text: #e0f2fe;
+      --text-muted: #7eb8d4;
+      --cyan: #22d3ee;
+      --aqua: #38bdf8;
+      --teal: #0891b2;
+      --glow: rgba(34, 211, 238, 0.35);
       --orange: #f59e0b;
-      --green: #34d399;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      background: var(--bg);
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--deep);
       color: var(--text);
       line-height: 1.65;
       font-size: 1.05rem;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
+    /* ── Ocean background ── */
+    .ocean-bg {
       position: fixed;
       inset: 0;
+      z-index: -2;
       background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent),
-        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(14, 165, 233, 0.08), transparent);
-      pointer-events: none;
+        radial-gradient(ellipse 120% 80% at 50% -30%, #0c4a6e 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 80% 60%, rgba(8, 145, 178, 0.25), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 10% 80%, rgba(14, 116, 144, 0.2), transparent 45%),
+        linear-gradient(180deg, #020810 0%, #041018 35%, #0a2540 70%, #062035 100%);
+    }
+
+    .caustics {
+      position: fixed;
+      inset: 0;
       z-index: -1;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      animation: causticsDrift 18s linear infinite;
+      pointer-events: none;
     }
 
+    @keyframes causticsDrift {
+      from { transform: translate(0, 0) scale(1.1); }
+      to { transform: translate(-5%, -3%) scale(1.15); }
+    }
+
+    .bubbles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(165, 243, 252, 0.5), rgba(34, 211, 238, 0.08));
+      border: 1px solid rgba(125, 211, 252, 0.15);
+      animation: rise linear infinite;
+    }
+
+    @keyframes rise {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.4; }
+      100% { transform: translateY(-110vh) translateX(20px); opacity: 0; }
+    }
+
+    .wave-layer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: -1;
+      line-height: 0;
+      pointer-events: none;
+    }
+
+    .wave-layer svg { width: 100%; height: auto; display: block; }
+
+    .wave-back { opacity: 0.15; animation: waveSlide 14s ease-in-out infinite; }
+    .wave-mid { opacity: 0.25; animation: waveSlide 10s ease-in-out infinite reverse; margin-bottom: -2px; }
+    .wave-front { opacity: 0.4; animation: waveSlide 7s ease-in-out infinite; margin-bottom: -4px; }
+
+    @keyframes waveSlide {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-2%); }
+    }
+
+    /* ── Layout ── */
     .container {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
-      padding: 0 1.5rem 4rem;
+      padding: 0 1.5rem 5rem;
+      position: relative;
     }
 
-    /* Hero */
+    /* ── Hero ── */
     .hero {
       text-align: center;
-      padding: 4rem 0 3rem;
-      border-bottom: 1px solid var(--border);
+      padding: 5rem 0 3.5rem;
     }
 
-    .hero h1 {
-      font-size: clamp(2.5rem, 8vw, 4rem);
-      font-weight: 700;
-      letter-spacing: 0.35em;
-      margin-left: 0.35em;
-      background: linear-gradient(135deg, #7dd3fc, #38bdf8, #0ea5e9);
+    /* Water letters */
+    .water-logo {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 0.06em;
+      margin-bottom: 0.5rem;
+      filter: url(#water-ripple);
+    }
+
+    .water-char {
+      display: inline-block;
+      font-size: clamp(3.2rem, 13vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0;
+      background: linear-gradient(
+        180deg,
+        #ecfeff 0%,
+        #a5f3fc 12%,
+        #22d3ee 35%,
+        #0891b2 55%,
+        #155e75 78%,
+        #083344 100%
+      );
+      background-size: 100% 220%;
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
+      color: transparent;
+      animation: waterFlow 5s ease-in-out infinite;
+      position: relative;
+      text-shadow: none;
     }
 
-    .hero .subtitle {
+    .water-char:nth-child(1) { animation-delay: 0s; }
+    .water-char:nth-child(3) { animation-delay: 0.4s; }
+    .water-char:nth-child(5) { animation-delay: 0.8s; }
+    .water-char:nth-child(7) { animation-delay: 1.2s; }
+
+    .water-char::before {
+      content: attr(data-char);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, transparent 40%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0.35;
+      animation: shimmer 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .water-dot {
+      font-size: clamp(1rem, 4vw, 1.6rem);
+      color: var(--cyan);
+      opacity: 0.85;
+      animation: dropletPulse 2.5s ease-in-out infinite;
+      text-shadow: 0 0 12px var(--glow);
+    }
+
+    @keyframes waterFlow {
+      0%, 100% { background-position: 0% 0%; filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.45)); }
+      50% { background-position: 0% 100%; filter: drop-shadow(0 0 28px rgba(56, 189, 248, 0.6)); }
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.55; }
+    }
+
+    @keyframes dropletPulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .hero-glow {
+      width: min(420px, 80vw);
+      height: 120px;
+      margin: -1rem auto 1.5rem;
+      background: radial-gradient(ellipse, rgba(34, 211, 238, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .subtitle {
       color: var(--text-muted);
-      font-size: 1.1rem;
-      margin-top: 0.75rem;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
     }
 
     .badges {
@@ -79,151 +218,180 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 0.5rem;
-      margin: 1.5rem 0;
+      margin: 1.75rem 0;
     }
 
-    .badges img { height: 22px; }
+    .badges img { height: 22px; border-radius: 4px; }
 
     .tagline {
       font-size: 1.15rem;
-      color: var(--text);
-      max-width: 540px;
+      max-width: 520px;
       margin: 0 auto;
     }
 
-    .tagline strong { color: var(--accent); }
+    .tagline strong { color: var(--cyan); }
 
-    /* Sections */
-    section {
-      padding: 2.5rem 0;
-      border-bottom: 1px solid var(--border);
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
     }
 
-    section:last-of-type { border-bottom: none; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.35rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); text-decoration: none; }
+
+    .btn-github {
+      background: rgba(12, 45, 72, 0.8);
+      border: 1px solid var(--border);
+      color: var(--text);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-github:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.15);
+    }
+
+    /* ── Glass sections ── */
+    section {
+      margin-bottom: 1.25rem;
+      padding: 2rem 2rem 2.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(125, 211, 252, 0.08);
+    }
 
     h2 {
-      font-size: 1.6rem;
-      font-weight: 600;
+      font-size: 1.5rem;
+      font-weight: 700;
       margin-bottom: 1.25rem;
-      color: var(--accent);
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    h2::before {
+      content: "";
+      width: 4px;
+      height: 1.1em;
+      background: linear-gradient(180deg, var(--cyan), var(--teal));
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--glow);
     }
 
     h3 {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 600;
       margin: 1.75rem 0 0.75rem;
-      color: var(--text);
+      color: #bae6fd;
     }
 
     p { margin-bottom: 1rem; }
-
     ul { margin: 0 0 1rem 1.25rem; }
     li { margin-bottom: 0.4rem; }
-
     strong { color: #fff; }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover { text-decoration: underline; }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { color: #a5f3fc; text-decoration: underline; }
 
     .highlight {
-      background: var(--accent-glow);
-      border-left: 3px solid var(--accent);
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      border-radius: 10px;
       padding: 1rem 1.25rem;
-      border-radius: 0 8px 8px 0;
       margin: 1.25rem 0;
     }
 
     .callout {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      background: rgba(4, 16, 24, 0.5);
+      border: 1px dashed rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
       padding: 1rem 1.25rem;
       margin: 1.25rem 0;
       font-size: 0.95rem;
       color: var(--text-muted);
     }
 
-    /* Tables */
     .table-wrap {
       overflow-x: auto;
       margin: 1.25rem 0;
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1px solid var(--border);
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
 
     th, td {
       padding: 0.75rem 1rem;
       text-align: left;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.1);
     }
 
     th {
-      background: var(--surface);
-      color: var(--accent);
+      background: rgba(4, 16, 24, 0.6);
+      color: var(--cyan);
       font-weight: 600;
     }
 
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: rgba(56, 189, 248, 0.04); }
+    tr:hover td { background: rgba(34, 211, 238, 0.04); }
 
     .status {
       display: inline-block;
-      padding: 0.15rem 0.6rem;
+      padding: 0.15rem 0.65rem;
       border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.78rem;
+      font-weight: 600;
     }
 
-    .status-progress { background: rgba(245, 158, 11, 0.2); color: var(--orange); }
-    .status-planned { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
-    .status-future { background: rgba(143, 180, 212, 0.15); color: var(--text-muted); }
+    .status-progress { background: rgba(245, 158, 11, 0.15); color: var(--orange); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .status-planned { background: rgba(34, 211, 238, 0.1); color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.25); }
+    .status-future { background: rgba(126, 184, 212, 0.1); color: var(--text-muted); border: 1px solid rgba(126, 184, 212, 0.2); }
 
-    /* Code blocks */
     pre {
-      background: var(--bg-elevated);
+      background: rgba(4, 16, 24, 0.7);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 1.25rem;
       overflow-x: auto;
       margin: 1.25rem 0;
       font-family: "IBM Plex Mono", monospace;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       line-height: 1.5;
     }
 
     code {
       font-family: "IBM Plex Mono", monospace;
       font-size: 0.88em;
-      background: var(--surface);
+      background: rgba(4, 16, 24, 0.6);
       padding: 0.15em 0.4em;
       border-radius: 4px;
+      border: 1px solid rgba(56, 189, 248, 0.12);
     }
 
-    pre code {
-      background: none;
-      padding: 0;
-    }
+    pre code { background: none; border: none; padding: 0; }
 
-    .diagram {
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      line-height: 1.35;
-    }
+    .diagram { color: var(--text-muted); font-size: 0.7rem; line-height: 1.35; }
 
-    /* Footer */
     .footer {
       text-align: center;
-      padding: 3rem 0 1rem;
+      padding: 3rem 1rem 1rem;
       color: var(--text-muted);
       font-style: italic;
       font-size: 0.95rem;
@@ -231,33 +399,67 @@
 
     .footer p { margin-bottom: 0.75rem; }
 
-    .github-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-      padding: 0.6rem 1.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-style: normal;
-      font-size: 0.95rem;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .github-link:hover {
-      border-color: var(--accent);
-      background: var(--accent-glow);
-      text-decoration: none;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+      .water-logo { filter: none; }
     }
   </style>
 </head>
 <body>
+  <!-- SVG filters for water ripple on logo -->
+  <svg aria-hidden="true" style="position:absolute;width:0;height:0">
+    <defs>
+      <filter id="water-ripple" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.015 0.04" numOctaves="2" result="noise">
+          <animate attributeName="baseFrequency" dur="6s" values="0.015 0.04;0.022 0.06;0.015 0.04" repeatCount="indefinite"/>
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="ocean-bg"></div>
+  <div class="caustics"></div>
+
+  <div class="bubbles" aria-hidden="true">
+    <div class="bubble" style="left:8%;width:6px;height:6px;animation-duration:12s;animation-delay:0s"></div>
+    <div class="bubble" style="left:22%;width:10px;height:10px;animation-duration:16s;animation-delay:2s"></div>
+    <div class="bubble" style="left:45%;width:5px;height:5px;animation-duration:11s;animation-delay:4s"></div>
+    <div class="bubble" style="left:68%;width:8px;height:8px;animation-duration:14s;animation-delay:1s"></div>
+    <div class="bubble" style="left:85%;width:12px;height:12px;animation-duration:18s;animation-delay:3s"></div>
+    <div class="bubble" style="left:55%;width:4px;height:4px;animation-duration:10s;animation-delay:6s"></div>
+    <div class="bubble" style="left:32%;width:7px;height:7px;animation-duration:13s;animation-delay:5s"></div>
+  </div>
+
+  <div class="wave-layer wave-back">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="rgba(8,145,178,0.3)" d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,30 1440,60 L1440,120 L0,120 Z"/>
+    </svg>
+  </div>
+  <div class="wave-layer wave-mid">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="rgba(34,211,238,0.15)" d="M0,50 C240,90 480,10 720,50 C960,90 1200,20 1440,50 L1440,100 L0,100 Z"/>
+    </svg>
+  </div>
+  <div class="wave-layer wave-front">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill="rgba(56,189,248,0.12)" d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,20 1440,40 L1440,80 L0,80 Z"/>
+    </svg>
+  </div>
+
   <div class="container">
     <header class="hero">
-      <h1>A.Q.U.A</h1>
-      <p class="subtitle">AQUA — AI Quality and Uncertainty Architect</p>
+      <div class="water-logo" aria-label="A.Q.U.A">
+        <span class="water-char" data-char="A">A</span><span class="water-dot">·</span>
+        <span class="water-char" data-char="Q">Q</span><span class="water-dot">·</span>
+        <span class="water-char" data-char="U">U</span><span class="water-dot">·</span>
+        <span class="water-char" data-char="A">A</span>
+      </div>
+      <div class="hero-glow"></div>
+      <p class="subtitle">AI Quality and Uncertainty Architect</p>
       <div class="badges">
         <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
         <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python 3.11+">
@@ -268,7 +470,9 @@
         <strong>Autonomous testing with explicit uncertainty.</strong><br>
         AI that explains <em>why</em> it tests, not just <em>what</em> it found.
       </p>
-      <a class="github-link" href="https://github.com/ElaMCB/AQUA">View on GitHub →</a>
+      <div class="hero-actions">
+        <a class="btn btn-github" href="https://github.com/ElaMCB/AQUA">View on GitHub →</a>
+      </div>
     </header>
 
     <section>
@@ -519,11 +723,6 @@ integrations:
         <li><strong>For managers:</strong> A.Q.U.A integrates with Shadow to turn test results into leadership intelligence</li>
         <li><strong>For compliance:</strong> A.Q.U.A provides full audit trails — every decision, every confidence score, every alternative considered</li>
       </ul>
-    </section>
-
-    <section>
-      <h2>License</h2>
-      <p>MIT — see <a href="https://github.com/ElaMCB/AQUA/blob/main/LICENSE">LICENSE</a> on GitHub.</p>
     </section>
 
     <footer class="footer">

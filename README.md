@@ -11,7 +11,7 @@
 <p align="center"><strong>Autonomous testing with explicit uncertainty.</strong><br>
 AI that explains <em>why</em> it tests, not just <em>what</em> it found.</p>
 
-<p align="center"><a href="https://elamcb.github.io/AQUA/">🌐 Project site</a></p>
+<p align="center"><a href="https://elamcb.github.io/AQUA/"><strong>A.Q.U.A</strong></a></p>
 
 ---
 
@@ -238,12 +238,6 @@ Jina proved autonomous AI testing is possible. A.Q.U.A proves it can be trustwor
 - **For engineers:** A.Q.U.A generates better scenarios because it explains its reasoning
 - **For managers:** A.Q.U.A integrates with Shadow to turn test results into leadership intelligence
 - **For compliance:** A.Q.U.A provides full audit trails — every decision, every confidence score, every alternative considered
-
----
-
-## License
-
-MIT — see [LICENSE](LICENSE)
 
 ---
 
