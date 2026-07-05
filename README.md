@@ -290,7 +290,33 @@ A.Q.U.A exists to make **uncertainty visible**: every scenario, diagnosis, and r
 
 ---
 
-<p align="center">
+<div align="center">
+
+**Signal chain**
+
+<a href="https://github.com/ElaMCB/AQUA"><img src="https://img.shields.io/badge/A.Q.U.A-testing%20engine-0891b2?style=for-the-badge" alt="A.Q.U.A — testing engine"></a>
+&nbsp;→&nbsp;
+<a href="https://github.com/ElaMCB/Hyper-Agent"><img src="https://img.shields.io/badge/Shadow-leadership%20layer-d4af37?style=for-the-badge" alt="Shadow — leadership layer"></a>
+
+<br><br>
+
+Uncertainty-quantified scenarios flow into Shadow morning briefs · [Integration docs →](https://github.com/ElaMCB/Hyper-Agent/blob/main/docs/INTEGRATION-AQUA.md)
+
+<br><br>
+
+<p>
   <em>"The measure of intelligence is the ability to change."</em> — Albert Einstein<br><br>
   <em>"The measure of trustworthy AI is the ability to say 'I'm not sure.'"</em> — A.Q.U.A
 </p>
+
+<br>
+
+[![Views](https://visitor-badge.laobi.icu/badge?page_id=ElaMCB.AQUA&left_text=Views&left_color=041018&right_color=0891b2)](https://github.com/ElaMCB/AQUA/graphs/traffic)
+
+<br><br>
+
+**[ElaMereanu](https://github.com/ElaMCB)**
+
+<sub>Counter updates when this README is loaded (approximate; includes bots). Repo owners: [Traffic](https://github.com/ElaMCB/AQUA/graphs/traffic).</sub>
+
+</div>
