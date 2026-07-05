@@ -232,24 +232,38 @@ python -m aqua report --results results/
 
 ## Integration with Shadow
 
-A.Q.U.A feeds Shadow (Hyper-Agent), creating the only platform that connects autonomous testing to leadership decision-making:
+A.Q.U.A feeds **[Shadow](https://github.com/ElaMCB/Hyper-Agent)** (Hyper-Agent) — the leadership layer that turns test intelligence into morning briefs and manager-ready framing.
+
+**Shared contract:** `schemas/aqua-report.schema.json` (same file in both repos)
 
 ```yaml
-# shadow/config.yaml
+# Hyper-Agent/config/config.yaml
 integrations:
-  aqua:                            # lowercase key — AQUA service identifier
+  aqua:
     enabled: true
-    endpoint: http://localhost:8000
+    report_path: data/aqua-report.json
+    alert_threshold: 0.75
     include_in_brief: true
-    alert_threshold: 0.75        # Flag scenarios with confidence < 75%
 ```
+
+**Demo loop:**
+
+```bash
+# 1. AQUA — analyze a PR or branch diff
+python -m aqua analyze --repo . --base main --head HEAD --output aqua-report.json
+
+# 2. Shadow — copy report and run brief
+cp aqua-report.json ../Hyper-Agent/data/aqua-report.json
+cd ../Hyper-Agent && python src/main.py brief
+```
+
+Full guide: [docs/DEPLOY-AQUA-SHADOW.md](docs/DEPLOY-AQUA-SHADOW.md) · Shadow side: [INTEGRATION-AQUA.md](https://github.com/ElaMCB/Hyper-Agent/blob/main/docs/INTEGRATION-AQUA.md)
 
 Shadow's morning brief then includes:
 
-- Overnight A.Q.U.A test results with confidence scores
-- Scenarios requiring manager attention (low confidence, high impact)
-- Production drift alerts
-- Recommended actions with full decision trails
+- A.Q.U.A scenario counts with snapshot provenance
+- Scenarios below `alert_threshold` flagged for manager review
+- Production drift signals when present
 
 ---
 
