@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.Q.U.A Demo — 90 Second Concept</title>
+  <meta name="description" content="Simulated 90-second demonstration of A.Q.U.A uncertainty-quantified testing and Shadow integration.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#041018">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep: #041018;
+      --ocean: #0a2540;
+      --surface: rgba(12, 45, 72, 0.72);
+      --border: rgba(56, 189, 248, 0.22);
+      --text: #e0f2fe;
+      --muted: #7eb8d4;
+      --cyan: #22d3ee;
+      --teal: #0891b2;
+      --green: #34d399;
+      --red: #f87171;
+      --gold: #d4af37;
+      --orange: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Outfit", system-ui, sans-serif;
+      background: var(--deep);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .demo-wrap {
+      width: min(960px, 100%);
+    }
+
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .demo-header a {
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: 0.88rem;
+    }
+
+    .demo-header a:hover { text-decoration: underline; }
+
+    .player {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #020810;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(34, 211, 238, 0.06) inset;
+    }
+
+    .player::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(8, 145, 178, 0.18), transparent 55%),
+        linear-gradient(180deg, #041018 0%, #020810 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .watermark {
+      position: absolute;
+      bottom: 3.25rem;
+      right: 1rem;
+      z-index: 30;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--cyan);
+      opacity: 0.2;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .disclaimer {
+      position: absolute;
+      top: 0.65rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(4, 16, 24, 0.85);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      white-space: nowrap;
+    }
+
+    .disclaimer.visible { opacity: 1; }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 2rem 3.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.55s ease, visibility 0.55s;
+    }
+
+    .scene.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 2;
+    }
+
+    .captions {
+      position: absolute;
+      bottom: 3.5rem;
+      left: 0;
+      right: 0;
+      z-index: 35;
+      text-align: center;
+      padding: 0 1.5rem;
+      pointer-events: none;
+    }
+
+    .caption-text {
+      display: inline-block;
+      max-width: 90%;
+      font-size: clamp(0.78rem, 2.2vw, 0.95rem);
+      line-height: 1.45;
+      color: #fff;
+      background: rgba(4, 16, 24, 0.88);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .caption-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: linear-gradient(transparent, rgba(4, 16, 24, 0.95));
+      padding: 0.5rem 0.75rem 0.65rem;
+    }
+
+    .progress-wrap {
+      height: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      border-radius: 999px;
+      margin-bottom: 0.45rem;
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--cyan));
+      border-radius: 999px;
+      transition: width 0.1s linear;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .control-btns {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .ctrl-btn {
+      background: rgba(12, 45, 72, 0.9);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 0.3rem 0.65rem;
+      font-family: inherit;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .ctrl-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .timecode {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* ── Scene: Problem ── */
+    .split-screen {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    .split-panel {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 1.25rem 1rem;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: rgba(4, 16, 24, 0.65);
+    }
+
+    .split-panel.pass { border-color: rgba(52, 211, 153, 0.35); }
+    .split-panel.fail { border-color: rgba(248, 113, 113, 0.35); }
+
+    .split-icon {
+      font-size: 2rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .split-panel.pass .split-icon { color: var(--green); }
+    .split-panel.fail .split-icon { color: var(--red); }
+
+    .split-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .split-title { font-size: 0.95rem; font-weight: 600; }
+
+    /* ── Scene: PR ── */
+    .pr-card {
+      width: 100%;
+      max-width: 640px;
+      background: rgba(4, 16, 24, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .pr-header {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .pr-badge {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .pr-body { padding: 1.1rem 1rem; }
+
+    .pr-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: #fff;
+    }
+
+    .pr-meta {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .pr-diff {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 8px;
+      padding: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .diff-del { color: var(--red); }
+    .diff-add { color: var(--green); }
+
+    /* ── Scene: Terminal ── */
+    .terminal {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(2, 8, 16, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(4, 16, 24, 0.9);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ef4444; }
+    .dot-y { background: #eab308; }
+    .dot-g { background: #22c55e; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .terminal-body {
+      padding: 0.85rem 1rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: clamp(0.62rem, 1.6vw, 0.74rem);
+      line-height: 1.55;
+      max-height: 280px;
+      overflow: hidden;
+      color: #bae6fd;
+    }
+
+    .t-prompt { color: var(--cyan); }
+    .t-dim { color: var(--muted); }
+    .t-phase { color: var(--orange); font-weight: 600; }
+    .t-ok { color: var(--green); }
+    .t-warn { color: var(--orange); }
+    .t-hi { color: #fff; font-weight: 600; }
+    .t-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 1em;
+      background: var(--cyan);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Scene: JSON ── */
+    .editor {
+      width: 100%;
+      max-width: 680px;
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .editor-tabs {
+      display: flex;
+      background: rgba(4, 16, 24, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0 0.5rem;
+    }
+
+    .editor-tab {
+      padding: 0.5rem 0.85rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+    }
+
+    .editor-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--cyan);
+      background: rgba(34, 211, 238, 0.06);
+    }
+
+    .editor-body {
+      padding: 1rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: clamp(0.65rem, 1.7vw, 0.78rem);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    .jk { color: #79c0ff; }
+    .js { color: #a5d6ff; }
+    .jn { color: #ffa657; }
+    .confidence-big {
+      text-align: center;
+      margin-top: 0.85rem;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: 0 0 24px rgba(34, 211, 238, 0.45);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .confidence-big.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ── Scene: Shadow ── */
+    .shadow-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .mini-report, .mini-brief {
+      background: rgba(4, 16, 24, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-size: 0.72rem;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .mini-brief { border-color: rgba(212, 175, 55, 0.35); }
+
+    .mini-brief h4 {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.55rem;
+    }
+
+    .alert-line { color: var(--orange); }
+
+    /* ── Scene: Closing ── */
+    .closing {
+      text-align: center;
+      max-width: 560px;
+    }
+
+    .closing-logo {
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 800;
+      background: linear-gradient(180deg, #ecfeff, #22d3ee, #0891b2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+    }
+
+    .closing-bullets {
+      list-style: none;
+      margin: 0 0 1.25rem;
+      padding: 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .closing-bullets li {
+      padding: 0.35rem 0;
+      padding-left: 1.1rem;
+      position: relative;
+    }
+
+    .closing-bullets li::before {
+      content: "·";
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .end-card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .end-card a {
+      display: inline-block;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: rgba(12, 45, 72, 0.8);
+    }
+
+    .end-card a.primary {
+      background: linear-gradient(135deg, var(--teal), #0e7490);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    .end-card a:hover { border-color: var(--cyan); color: var(--cyan); }
+    .end-card a.primary:hover { color: #fff; opacity: 0.92; }
+
+    @media (max-width: 640px) {
+      .split-screen, .shadow-split { grid-template-columns: 1fr; }
+      .scene { padding: 2rem 1rem 3.5rem; }
+      .terminal-body { max-height: 220px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .scene, .caption-text, .confidence-big { transition: none; }
+      .t-cursor { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <h1>A.Q.U.A · 90-second concept demo</h1>
+      <a href="index.html">← Back to site</a>
+    </div>
+
+    <div class="player" id="player" role="region" aria-label="A.Q.U.A demonstration">
+      <div class="disclaimer" id="disclaimer">Simulated data for demonstration purposes</div>
+      <div class="watermark" aria-hidden="true">A·Q·U·A</div>
+
+      <!-- Scene 1: Problem -->
+      <div class="scene" data-scene="problem">
+        <div class="split-screen">
+          <div class="split-panel pass">
+            <div class="split-icon">✓</div>
+            <div class="split-label">CI pipeline</div>
+            <div class="split-title">All tests passed</div>
+          </div>
+          <div class="split-panel fail">
+            <div class="split-icon">⚠</div>
+            <div class="split-label">Production</div>
+            <div class="split-title">Incident: expired coupons accepted</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 2: PR -->
+      <div class="scene" data-scene="pr">
+        <div class="pr-card">
+          <div class="pr-header">
+            <span class="pr-badge">Open</span>
+            <span>checkout / payment-validation</span>
+          </div>
+          <div class="pr-body">
+            <div class="pr-title">#247 Refactor payment validation — remove redundant checks</div>
+            <div class="pr-meta">dev-sarah opened 2 hours ago · +12 −47 · 2 files changed</div>
+            <div class="pr-diff">
+              <div class="diff-del">- if coupon.expired_at &lt; now():</div>
+              <div class="diff-del">-     raise CouponExpiredError()</div>
+              <div class="diff-add">+ # expiry handled upstream (assumed)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Terminal -->
+      <div class="scene" data-scene="terminal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+            <span class="terminal-title">aqua analyze — PR #247</span>
+          </div>
+          <div class="terminal-body" id="terminal-out"></div>
+        </div>
+      </div>
+
+      <!-- Scene 4: Report -->
+      <div class="scene" data-scene="report">
+        <div>
+          <div class="editor">
+            <div class="editor-tabs">
+              <span class="editor-tab active">aqua-report.json</span>
+            </div>
+            <div class="editor-body" id="json-out"></div>
+          </div>
+          <div class="confidence-big" id="confidence-big">87% confidence</div>
+        </div>
+      </div>
+
+      <!-- Scene 5: Shadow -->
+      <div class="scene" data-scene="shadow">
+        <div class="shadow-split">
+          <div class="mini-report">
+            <strong style="color:var(--cyan)">aqua-report.json</strong><br>
+            scenario: Expired coupon rejection<br>
+            confidence: <strong>0.87</strong><br>
+            impact: HIGH<br>
+            alternatives: 2
+          </div>
+          <div class="mini-brief">
+            <h4>Shadow — Morning Brief</h4>
+            <div class="alert-line">⚠ LOW CONFIDENCE ALERT</div>
+            Expired coupon rejection (87%)<br>
+            PR #247 · Add expiry assertion<br><br>
+            <span class="t-dim">• Coupon timeout → silent failure (9%)</span><br>
+            <span class="t-dim">• Currency conversion masks value (4%)</span><br><br>
+            <strong>ACTION REQUIRED</strong><br>
+            □ Review PR #247 with dev-sarah
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 6: Closing -->
+      <div class="scene" data-scene="closing">
+        <div class="closing">
+          <div class="closing-logo">A·Q·U·A</div>
+          <ul class="closing-bullets">
+            <li><strong style="color:#fff">Engineers</strong> — scenarios with explicit rationale</li>
+            <li><strong style="color:#fff">Managers</strong> — uncertainty becomes leadership intelligence</li>
+            <li><strong style="color:#fff">Compliance</strong> — full audit trails, every confidence score</li>
+          </ul>
+          <div class="end-card">
+            <a class="primary" href="https://github.com/ElaMCB/AQUA" target="_blank" rel="noopener">★ Star on GitHub</a>
+            <a href="https://github.com/ElaMCB/AQUA/issues" target="_blank" rel="noopener">Get early access</a>
+            <a href="https://elamcb.github.io/AQUA/" target="_blank" rel="noopener">elamcb.github.io/AQUA</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="captions" aria-live="polite">
+        <span class="caption-text" id="caption"></span>
+      </div>
+
+      <div class="controls">
+        <div class="progress-wrap" id="progress-wrap" role="slider" aria-label="Demo progress" aria-valuemin="0" aria-valuemax="90">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="control-row">
+          <div class="control-btns">
+            <button class="ctrl-btn" id="btn-play" type="button">Play</button>
+            <button class="ctrl-btn" id="btn-restart" type="button">Restart</button>
+          </div>
+          <span class="timecode" id="timecode">0:00 / 1:30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DURATION = 90;
+    const SCENES = [
+      { id: "problem",  start: 0,  end: 10 },
+      { id: "pr",       start: 10, end: 25 },
+      { id: "terminal", start: 25, end: 45 },
+      { id: "report",   start: 45, end: 65 },
+      { id: "shadow",   start: 65, end: 80 },
+      { id: "closing",  start: 80, end: 90 },
+    ];
+
+    const CAPTIONS = [
+      { at: 0,  text: "Current AI testing tools promise autonomy. But when they say 'all clear,' they hide how confident they really are." },
+      { at: 5,  text: "In regulated environments, that's not autonomy. It's liability." },
+      { at: 10, text: "Here's a real scenario. A developer refactors payment validation and removes what looks like a redundant expiry check." },
+      { at: 18, text: "Traditional tools see code coverage and move on." },
+      { at: 25, text: "A.Q.U.A doesn't just see coverage. It traces the change through the codebase and maps the impact graph." },
+      { at: 32, text: "It generates targeted scenarios — each with explicit rationale and confidence scores." },
+      { at: 45, text: "Eighty-seven percent confidence. Not a black-box pass/fail." },
+      { at: 52, text: "A.Q.U.A tells you why this scenario matters, what else could go wrong, and how sure it is." },
+      { at: 58, text: "That's the difference between guessing and knowing." },
+      { at: 65, text: "When A.Q.U.A connects to Shadow, uncertainty scores become leadership intelligence." },
+      { at: 72, text: "Managers see what needs attention — not just what passed." },
+      { at: 80, text: "A.Q.U.A makes uncertainty visible, auditable, and actionable." },
+      { at: 85, text: "Because trustworthy AI isn't what it found — it's the ability to say 'I'm not sure.'" },
+    ];
+
+    const TERMINAL_LINES = [
+      { t: "prompt", s: "$ python -m aqua analyze --repo ./checkout --pr 247 --output aqua-report.json" },
+      { t: "blank" },
+      { t: "hi", s: "A.Q.U.A v0.1.0-alpha — AI Quality and Uncertainty Architect" },
+      { t: "dim", s: "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" },
+      { t: "blank" },
+      { t: "phase", s: "[INGEST]  Loading PR #247: \"Refactor payment validation...\"" },
+      { t: "ok", s: "          ✓ Git diff loaded (2 files, +12/-47 lines)" },
+      { t: "ok", s: "          ✓ AST parsed (payment/validate.py, checkout/cart.py)" },
+      { t: "ok", s: "          ✓ API specs loaded (openapi/v2/checkout.yaml)" },
+      { t: "blank" },
+      { t: "phase", s: "[REASON]  Building causal impact graph..." },
+      { t: "dim", s: "          → Root change: validate_payment() — removed expiry check" },
+      { t: "dim", s: "          → 3 affected surfaces found:" },
+      { t: "dim", s: "            • payment           (distance: 0, confidence: 0.99)" },
+      { t: "dim", s: "            • checkout          (distance: 1, confidence: 0.94)" },
+      { t: "dim", s: "            • coupon_validation (distance: 2, confidence: 0.71)" },
+      { t: "blank" },
+      { t: "phase", s: "[REASON]  Generating scenarios with uncertainty quantification..." },
+      { t: "hi", s: "          → Scenario 1/3: \"Expired coupon rejection at checkout\"" },
+      { t: "warn", s: "            confidence: 0.87 | impact: HIGH | alternatives: 2" },
+      { t: "blank" },
+      { t: "phase", s: "[EXPLAIN] Ranking alternative hypotheses..." },
+      { t: "dim", s: "          → 1. Coupon service timeout (9%)" },
+      { t: "dim", s: "          → 2. Currency conversion masks value (4%)" },
+      { t: "blank" },
+      { t: "phase", s: "[CONNECT] Shadow integration: alert_threshold=0.75" },
+      { t: "warn", s: "          → 1 scenario flagged for manager review" },
+      { t: "blank" },
+      { t: "ok", s: "✓ Report saved: aqua-report.json | Execution time: 2.85s" },
+    ];
+
+    const JSON_LINES = [
+      '<span class="jk">"scenario"</span>: <span class="js">"Expired coupon rejection at checkout"</span>,',
+      '<span class="jk">"confidence"</span>: <span class="jn">0.87</span>,',
+      '<span class="jk">"rationale"</span>: <span class="js">"Payment validation refactor removed explicit expiry check"</span>,',
+      '<span class="jk">"recommended_action"</span>: <span class="js">"Add explicit expiry assertion before payment processing"</span>,',
+      '<span class="jk">"alternatives"</span>: [',
+      '  { <span class="jk">"hypothesis"</span>: <span class="js">"Coupon service timeout causes silent failure"</span>, <span class="jk">"probability"</span>: <span class="jn">0.09</span> },',
+      '  { <span class="jk">"hypothesis"</span>: <span class="js">"Currency conversion masks coupon value"</span>, <span class="jk">"probability"</span>: <span class="jn">0.04</span> }',
+      ']',
+    ];
+
+    const isEmbed = new URLSearchParams(location.search).get("embed") === "1";
+    if (isEmbed) {
+      document.querySelector(".demo-header").style.display = "none";
+      document.body.style.padding = "0";
+    }
+
+    const player = document.getElementById("player");
+    const disclaimer = document.getElementById("disclaimer");
+    const captionEl = document.getElementById("caption");
+    const progressBar = document.getElementById("progress-bar");
+    const progressWrap = document.getElementById("progress-wrap");
+    const timecode = document.getElementById("timecode");
+    const btnPlay = document.getElementById("btn-play");
+    const btnRestart = document.getElementById("btn-restart");
+    const terminalOut = document.getElementById("terminal-out");
+    const jsonOut = document.getElementById("json-out");
+    const confidenceBig = document.getElementById("confidence-big");
+
+    let elapsed = 0;
+    let playing = false;
+    let rafId = null;
+    let lastTs = null;
+    let terminalIdx = 0;
+    let terminalTimer = 0;
+    let jsonIdx = 0;
+    let jsonTimer = 0;
+    let confidenceShown = false;
+
+    function fmtTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return m + ":" + String(sec).padStart(2, "0");
+    }
+
+    function setScene(t) {
+      const active = SCENES.find(s => t >= s.start && t < s.end);
+      document.querySelectorAll(".scene").forEach(el => {
+        el.classList.toggle("active", el.dataset.scene === (active && active.id));
+      });
+    }
+
+    function setCaption(t) {
+      let text = "";
+      for (let i = CAPTIONS.length - 1; i >= 0; i--) {
+        if (t >= CAPTIONS[i].at) { text = CAPTIONS[i].text; break; }
+      }
+      if (text && captionEl.textContent !== text) {
+        captionEl.classList.remove("visible");
+        setTimeout(() => {
+          captionEl.textContent = text;
+          captionEl.classList.add("visible");
+        }, 120);
+      } else if (!text) {
+        captionEl.classList.remove("visible");
+      }
+    }
+
+    function renderTerminalLine(line) {
+      const div = document.createElement("div");
+      if (line.t === "blank") { div.innerHTML = "&nbsp;"; return div; }
+      const cls = { prompt: "t-prompt", dim: "t-dim", phase: "t-phase", ok: "t-ok", warn: "t-warn", hi: "t-hi" }[line.t] || "";
+      div.className = cls;
+      div.textContent = line.s;
+      return div;
+    }
+
+    function tickTerminal(dt) {
+      if (elapsed < 25 || elapsed >= 45) return;
+      terminalTimer += dt;
+      if (terminalTimer > 0.55 && terminalIdx < TERMINAL_LINES.length) {
+        terminalOut.appendChild(renderTerminalLine(TERMINAL_LINES[terminalIdx++]));
+        terminalTimer = 0;
+        if (terminalIdx === TERMINAL_LINES.length) {
+          const cur = document.createElement("div");
+          cur.innerHTML = '<span class="t-cursor"></span>';
+          terminalOut.appendChild(cur);
+        }
+      }
+    }
+
+    function tickJson(dt) {
+      if (elapsed < 45 || elapsed >= 65) return;
+      jsonTimer += dt;
+      if (jsonTimer > 0.7 && jsonIdx < JSON_LINES.length) {
+        const div = document.createElement("div");
+        div.innerHTML = JSON_LINES[jsonIdx++];
+        jsonOut.appendChild(div);
+        jsonTimer = 0;
+      }
+      if (elapsed >= 47 && !confidenceShown) {
+        confidenceShown = true;
+        confidenceBig.classList.add("visible");
+      }
+    }
+
+    function updateUI() {
+      progressBar.style.width = (elapsed / DURATION * 100) + "%";
+      progressWrap.setAttribute("aria-valuenow", Math.floor(elapsed));
+      timecode.textContent = fmtTime(elapsed) + " / " + fmtTime(DURATION);
+      setScene(elapsed);
+      setCaption(elapsed);
+      disclaimer.classList.toggle("visible", elapsed < 8);
+    }
+
+    function reset() {
+      elapsed = 0;
+      lastTs = null;
+      terminalIdx = 0;
+      terminalTimer = 0;
+      jsonIdx = 0;
+      jsonTimer = 0;
+      confidenceShown = false;
+      terminalOut.innerHTML = "";
+      jsonOut.innerHTML = "";
+      confidenceBig.classList.remove("visible");
+      captionEl.textContent = "";
+      captionEl.classList.remove("visible");
+      updateUI();
+    }
+
+    function frame(ts) {
+      if (!playing) return;
+      if (lastTs == null) lastTs = ts;
+      const dt = Math.min((ts - lastTs) / 1000, 0.1);
+      lastTs = ts;
+      elapsed += dt;
+      if (elapsed >= DURATION) {
+        elapsed = DURATION;
+        playing = false;
+        btnPlay.textContent = "Replay";
+      }
+      tickTerminal(dt);
+      tickJson(dt);
+      updateUI();
+      if (playing) rafId = requestAnimationFrame(frame);
+    }
+
+    function play() {
+      if (elapsed >= DURATION) reset();
+      playing = true;
+      btnPlay.textContent = "Pause";
+      lastTs = null;
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function pause() {
+      playing = false;
+      btnPlay.textContent = "Play";
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+
+    btnPlay.addEventListener("click", () => playing ? pause() : play());
+    btnRestart.addEventListener("click", () => { pause(); reset(); play(); });
+
+    progressWrap.addEventListener("click", (e) => {
+      const rect = progressWrap.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      elapsed = Math.max(0, Math.min(DURATION, ratio * DURATION));
+      terminalOut.innerHTML = "";
+      jsonOut.innerHTML = "";
+      terminalIdx = TERMINAL_LINES.length;
+      jsonIdx = JSON_LINES.length;
+      confidenceShown = elapsed >= 47;
+      if (confidenceShown) confidenceBig.classList.add("visible");
+      else confidenceBig.classList.remove("visible");
+      updateUI();
+    });
+
+    // Autoplay when opened (muted captions-only demo)
+    setTimeout(() => play(), 800);
+  </script>
+</body>
+</html>

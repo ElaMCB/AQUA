@@ -268,6 +268,64 @@
       box-shadow: 0 0 24px rgba(34, 211, 238, 0.15);
     }
 
+    .btn-demo {
+      background: linear-gradient(135deg, rgba(8, 145, 178, 0.9), rgba(14, 116, 144, 0.85));
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      color: #fff;
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.12);
+    }
+
+    .btn-demo:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 28px rgba(34, 211, 238, 0.25);
+    }
+
+    /* ── Demo embed ── */
+    .demo-section {
+      margin: 0 0 2.5rem;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .demo-section h2 { justify-content: center; }
+    .demo-section h2::before { display: none; }
+
+    .demo-lede {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: -0.5rem 0 1.25rem;
+    }
+
+    .demo-embed {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+      background: #020810;
+    }
+
+    .demo-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .demo-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+
     /* ── Glass sections ── */
     section {
       margin-bottom: 1.25rem;
@@ -758,9 +816,19 @@
         AI that explains <em>why</em> it tests, not just <em>what</em> it found.
       </p>
       <div class="hero-actions">
+        <a class="btn btn-demo" href="demo.html">▶ Watch 90s demo</a>
         <a class="btn btn-github" href="https://github.com/ElaMCB/AQUA">View on GitHub →</a>
       </div>
     </header>
+
+    <section class="demo-section" id="demo">
+      <h2>See A.Q.U.A in action</h2>
+      <p class="demo-lede">Auto-playing concept demo · simulated data · captions included · no recording required</p>
+      <div class="demo-embed">
+        <iframe src="demo.html?embed=1" title="A.Q.U.A 90-second concept demonstration" loading="lazy"></iframe>
+      </div>
+      <p class="demo-note">Simulated data for demonstration purposes · <a href="demo.html">Open full-screen demo</a></p>
+    </section>
 
     <section id="problem">
       <h2>The Problem</h2>
@@ -1054,6 +1122,8 @@ integrations:
         <div>
           <h3>On this page</h3>
           <ul>
+            <li><a href="#demo">90s demo</a></li>
+            <li><a href="demo.html">Full-screen demo</a></li>
             <li><a href="#problem">The Problem</a></li>
             <li><a href="#capabilities">What A.Q.U.A Does</a></li>
             <li><a href="#principles">Core Principles</a></li>

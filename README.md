@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="https://elamcb.github.io/AQUA/"><img src="https://img.shields.io/badge/A.Q.U.A-site-0891b2?style=for-the-badge" alt="A.Q.U.A site"></a>
+  <a href="https://elamcb.github.io/AQUA/demo.html"><img src="https://img.shields.io/badge/▶-90s%20demo-22d3ee?style=for-the-badge" alt="Watch 90-second demo"></a>
 </p>
 
 <p align="center">

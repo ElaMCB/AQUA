@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0-alpha",
+  "generated_at": "2026-07-05T15:00:00Z",
+  "snapshot_id": "b2c3d4e5",
+  "source": {
+    "repo": "checkout",
+    "pr": 247,
+    "title": "Refactor payment validation — remove redundant checks"
+  },
+  "scenarios": [
+    {
+      "id": "scn-expired-coupon",
+      "scenario": "Expired coupon rejection at checkout",
+      "confidence": 0.87,
+      "impact": "high",
+      "rationale": "Payment validation refactor removed explicit expiry check; historical pattern shows 73% of similar changes introduced coupon bypass",
+      "recommended_action": "Add explicit expiry assertion before payment processing",
+      "alternatives": [
+        {
+          "hypothesis": "Coupon service timeout causes silent failure",
+          "probability": 0.09,
+          "evidence": "No timeout handling in new async path"
+        },
+        {
+          "hypothesis": "Currency conversion masks coupon value",
+          "probability": 0.04,
+          "evidence": "Unrelated change in conversion layer"
+        }
+      ]
+    }
+  ],
+  "shadow": {
+    "alert_threshold": 0.75,
+    "flagged_for_review": 1
+  }
+}
