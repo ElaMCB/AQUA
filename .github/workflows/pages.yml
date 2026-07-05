@@ -21,7 +21,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,5 +29,21 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-      - uses: actions/deploy-pages@v4
+      - name: Wait for prior Pages deployment
+        run: sleep 30
+      - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - name: Retry after Pages slot conflict
+        if: steps.deployment.outcome != 'success'
+        run: sleep 60
+      - name: Deploy to GitHub Pages (retry)
+        if: steps.deployment.outcome != 'success'
+        id: deployment_retry
+        uses: actions/deploy-pages@v4
+      - name: Fail if all deploy attempts failed
+        if: steps.deployment.outcome != 'success' && steps.deployment_retry.outcome != 'success'
+        run: |
+          echo "GitHub Pages deploy failed after retry. Re-run workflow from Actions tab."
+          exit 1
