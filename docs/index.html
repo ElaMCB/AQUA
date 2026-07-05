@@ -25,6 +25,7 @@
       --teal: #0891b2;
       --glow: rgba(34, 211, 238, 0.35);
       --orange: #f59e0b;
+      --gold: #d4af37;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -449,6 +450,198 @@
     pre code { background: none; border: none; padding: 0; }
 
     .diagram { color: var(--text-muted); font-size: 0.7rem; line-height: 1.35; }
+
+    /* ── Architecture (full-bleed) ── */
+    section.arch-bleed {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      box-shadow: none;
+      backdrop-filter: blur(14px);
+    }
+
+    .arch-bleed {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      margin-bottom: 1.25rem;
+      padding: 2.5rem 1.25rem 3rem;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 0%, rgba(8, 145, 178, 0.14), transparent 55%),
+        rgba(4, 16, 24, 0.55);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .arch-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .arch-bleed h2 {
+      justify-content: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .arch-bleed h2::before { display: none; }
+
+    .arch-kicker {
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.75rem;
+    }
+
+    .arch-pipeline {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 0.5rem;
+    }
+
+    .arch-node {
+      background: rgba(4, 16, 24, 0.72);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.15rem 1.1rem 1rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+    }
+
+    .arch-node::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--teal));
+    }
+
+    .arch-node--connect::before {
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+    }
+
+    .arch-node--connect { border-color: rgba(212, 175, 55, 0.28); }
+
+    .arch-step {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .arch-node h3 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.06em;
+    }
+
+    .arch-node ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .arch-node li {
+      position: relative;
+      padding-left: 0.85rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .arch-node li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--glow);
+    }
+
+    .arch-arrow-h {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan);
+      font-size: 1.35rem;
+      opacity: 0.85;
+      padding: 0 0.15rem;
+    }
+
+    .arch-merge {
+      display: flex;
+      justify-content: center;
+      margin: 0.85rem 0 0.35rem;
+      height: 2rem;
+    }
+
+    .arch-merge svg {
+      width: min(520px, 90%);
+      height: 2rem;
+      overflow: visible;
+    }
+
+    .arch-flow-line {
+      stroke: var(--cyan);
+      stroke-width: 2;
+      fill: none;
+      opacity: 0.55;
+      stroke-dasharray: 6 4;
+      animation: archFlow 2.5s linear infinite;
+    }
+
+    @keyframes archFlow {
+      to { stroke-dashoffset: -20; }
+    }
+
+    .arch-down {
+      display: flex;
+      justify-content: center;
+      margin: 0.5rem 0;
+      color: var(--cyan);
+      font-size: 1.25rem;
+      opacity: 0.8;
+    }
+
+    .arch-stack {
+      display: grid;
+      gap: 0.75rem;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .arch-pipeline {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .arch-arrow-h {
+        transform: rotate(90deg);
+        padding: 0.35rem 0;
+        font-size: 1.1rem;
+      }
+
+      .arch-merge { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .arch-flow-line { animation: none; }
+    }
 
     /* ── Site footer ── */
     .site-footer {
@@ -876,50 +1069,83 @@
       </div>
     </section>
 
-    <section id="architecture">
-      <h2>Architecture</h2>
-      <pre class="diagram"><code>┌─────────────────────────────────────────────────────────────┐
-│                    A.Q.U.A ARCHITECTURE                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │
-│  │   INGEST    │───→│   REASON    │───→│   EXECUTE   │    │
-│  │             │    │             │    │             │    │
-│  │ • Git diffs │    │ • Causal    │    │ • Sandbox   │    │
-│  │ • Code AST  │    │   impact    │    │   orchestra-│   │
-│  │ • API specs │    │   analysis  │    │   tion      │    │
-│  │ • Runtime   │    │ • Scenario  │    │ • Parallel  │    │
-│  │   telemetry │    │   generation│    │   execution │    │
-│  │ • Historical│    │ • Uncertainty│   │ • Trace     │    │
-│  │   failures  │    │   modeling  │    │   collection│    │
-│  └─────────────┘    └─────────────┘    └─────────────┘    │
-│         │                  │                  │            │
-│         └──────────────────┼──────────────────┘            │
-│                            ↓                                │
-│                   ┌─────────────┐                           │
-│                   │   EXPLAIN   │                           │
-│                   │             │                           │
-│                   │ • Confidence│                           │
-│                   │   scores per│                           │
-│                   │   scenario  │                           │
-│                   │ • Alternative│                          │
-│                   │   hypotheses│                           │
-│                   │ • Decision  │                           │
-│                   │   trails    │                           │
-│                   └─────────────┘                           │
-│                            ↓                                │
-│                   ┌─────────────┐                           │
-│                   │   CONNECT   │                           │
-│                   │             │                           │
-│                   │ • Shadow    │                           │
-│                   │   integration│                          │
-│                   │ • Manager   │                           │
-│                   │   briefs      │                           │
-│                   │ • Stakeholder│                          │
-│                   │   dashboards  │                           │
-│                   └─────────────┘                           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘</code></pre>
+    <section id="architecture" class="arch-bleed">
+      <div class="arch-inner">
+        <h2>Architecture</h2>
+        <p class="arch-kicker">A.Q.U.A pipeline</p>
+
+        <div class="arch-pipeline" aria-label="A.Q.U.A architecture flow">
+          <article class="arch-node">
+            <div class="arch-step">01</div>
+            <h3>INGEST</h3>
+            <ul>
+              <li>Git diffs</li>
+              <li>Code AST</li>
+              <li>API specs</li>
+              <li>Runtime telemetry</li>
+              <li>Historical failures</li>
+            </ul>
+          </article>
+
+          <div class="arch-arrow-h" aria-hidden="true">→</div>
+
+          <article class="arch-node">
+            <div class="arch-step">02</div>
+            <h3>REASON</h3>
+            <ul>
+              <li>Causal impact analysis</li>
+              <li>Scenario generation</li>
+              <li>Uncertainty modeling</li>
+            </ul>
+          </article>
+
+          <div class="arch-arrow-h" aria-hidden="true">→</div>
+
+          <article class="arch-node">
+            <div class="arch-step">03</div>
+            <h3>EXECUTE</h3>
+            <ul>
+              <li>Sandbox orchestration</li>
+              <li>Parallel execution</li>
+              <li>Trace collection</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="arch-merge" aria-hidden="true">
+          <svg viewBox="0 0 520 32" preserveAspectRatio="xMidYMid meet">
+            <path class="arch-flow-line" d="M 40 4 L 40 16 L 260 16 L 260 28" />
+            <path class="arch-flow-line" d="M 260 4 L 260 16" />
+            <path class="arch-flow-line" d="M 480 4 L 480 16 L 260 16" />
+          </svg>
+        </div>
+
+        <div class="arch-down" aria-hidden="true">↓</div>
+
+        <div class="arch-stack">
+          <article class="arch-node">
+            <div class="arch-step">04</div>
+            <h3>EXPLAIN</h3>
+            <ul>
+              <li>Confidence scores per scenario</li>
+              <li>Alternative hypotheses</li>
+              <li>Decision trails</li>
+            </ul>
+          </article>
+
+          <div class="arch-down" aria-hidden="true">↓</div>
+
+          <article class="arch-node arch-node--connect">
+            <div class="arch-step">05</div>
+            <h3>CONNECT</h3>
+            <ul>
+              <li>Shadow integration</li>
+              <li>Manager briefs</li>
+              <li>Stakeholder dashboards</li>
+            </ul>
+          </article>
+        </div>
+      </div>
     </section>
 
     <section id="principles">
