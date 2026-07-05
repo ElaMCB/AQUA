@@ -302,13 +302,6 @@ A.Q.U.A exists to make **uncertainty visible**: every scenario, diagnosis, and r
 
 Uncertainty-quantified scenarios flow into Shadow morning briefs · [Integration docs →](https://github.com/ElaMCB/Hyper-Agent/blob/main/docs/INTEGRATION-AQUA.md)
 
-<br><br>
-
-<p>
-  <em>"The measure of intelligence is the ability to change."</em> — Albert Einstein<br><br>
-  <em>"The measure of trustworthy AI is the ability to say 'I'm not sure.'"</em> — A.Q.U.A
-</p>
-
 <br>
 
 [![Views](https://visitor-badge.laobi.icu/badge?page_id=ElaMCB.AQUA&left_text=Views&left_color=041018&right_color=0891b2)](https://github.com/ElaMCB/AQUA/graphs/traffic)
