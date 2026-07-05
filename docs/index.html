@@ -392,15 +392,109 @@
 
     .diagram { color: var(--text-muted); font-size: 0.7rem; line-height: 1.35; }
 
-    .footer {
-      text-align: center;
-      padding: 3rem 1rem 1rem;
+    /* ── Site footer ── */
+    .site-footer {
+      margin-top: 3rem;
+      padding: 2.5rem 1.5rem 2rem;
+      background: rgba(4, 16, 24, 0.88);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .site-footer__inner {
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .site-footer__grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 640px) {
+      .site-footer__grid { grid-template-columns: 1fr 1fr 1.2fr; gap: 2.5rem; }
+    }
+
+    .site-footer h3 {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       color: var(--text-muted);
-      font-style: italic;
+      margin: 0 0 0.85rem;
+    }
+
+    .site-footer ul { list-style: none; margin: 0; padding: 0; }
+
+    .site-footer li { margin-bottom: 0.45rem; }
+
+    .site-footer a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.15s ease;
+    }
+
+    .site-footer a:hover { color: var(--cyan); }
+
+    .site-footer__signal {
+      margin: 0 0 0.85rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .site-footer__chain {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.65rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .site-footer__chain img { height: 28px; width: auto; display: block; }
+
+    .site-footer__arrow {
+      color: var(--cyan);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .site-footer__badge {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .site-footer__bottom {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer__bottom p { margin: 0 0 0.65rem; }
+
+    .site-footer__bottom a {
+      color: var(--cyan);
+      font-weight: 600;
       font-size: 0.95rem;
     }
 
-    .footer p { margin-bottom: 0.75rem; }
+    .site-footer__meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .site-footer__meta a { font-size: 0.75rem; font-weight: 400; }
+
+    .site-footer__views img { display: inline-block; vertical-align: middle; }
 
     /* ── Core Principles ── */
     .principles-intro {
@@ -668,7 +762,7 @@
       </div>
     </header>
 
-    <section>
+    <section id="problem">
       <h2>The Problem</h2>
       <p>Current AI testing tools promise autonomy but deliver black boxes:</p>
       <ul>
@@ -680,7 +774,7 @@
       <p class="highlight"><strong>A.Q.U.A is different.</strong></p>
     </section>
 
-    <section>
+    <section id="capabilities">
       <h2>What A.Q.U.A Does</h2>
       <p>A.Q.U.A is an autonomous AI testing engine built on a single principle: <strong>every decision carries uncertainty, and that uncertainty must be visible, auditable, and actionable.</strong></p>
       <div class="table-wrap">
@@ -714,7 +808,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="architecture">
       <h2>Architecture</h2>
       <pre class="diagram"><code>┌─────────────────────────────────────────────────────────────┐
 │                    A.Q.U.A ARCHITECTURE                     │
@@ -760,7 +854,7 @@
 └─────────────────────────────────────────────────────────────┘</code></pre>
     </section>
 
-    <section>
+    <section id="principles">
       <h2>Core Principles</h2>
       <p class="principles-intro">Three rules that govern every A.Q.U.A decision — from scenario generation to production validation.</p>
 
@@ -843,7 +937,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="quick-start">
       <h2>Quick Start</h2>
       <div class="callout">
         <strong>Naming:</strong> The product is <strong>A.Q.U.A</strong>. The repo, package, and CLI use <strong>AQUA</strong> / <code>aqua</code> — same project, different surfaces.
@@ -890,7 +984,7 @@ python -m aqua execute \
 python -m aqua report --results results/</code></pre>
     </section>
 
-    <section>
+    <section id="shadow">
       <h2>Integration with Shadow</h2>
       <p>A.Q.U.A feeds Shadow (Hyper-Agent), creating the only platform that connects autonomous testing to leadership decision-making:</p>
       <pre><code># shadow/config.yaml
@@ -909,7 +1003,7 @@ integrations:
       </ul>
     </section>
 
-    <section>
+    <section id="roadmap">
       <h2>Roadmap</h2>
       <div class="table-wrap">
         <table>
@@ -942,7 +1036,7 @@ integrations:
       </div>
     </section>
 
-    <section>
+    <section id="purpose">
       <h2>Purpose</h2>
       <p>Autonomous AI can generate tests, diagnose failures, and suggest fixes — but most tools hide how confident they are. In production and regulated environments, a black-box pass/fail is not enough.</p>
       <p class="highlight"><strong>A.Q.U.A exists to make uncertainty visible:</strong> every scenario, diagnosis, and recommendation ships with rationale, confidence, and alternatives — so humans stay in control.</p>
@@ -952,11 +1046,59 @@ integrations:
         <li><strong>For compliance:</strong> A.Q.U.A provides full audit trails — every decision, every confidence score, every alternative considered</li>
       </ul>
     </section>
-
-    <footer class="footer">
-      <p>"The measure of intelligence is the ability to change." — Albert Einstein</p>
-      <p>"The measure of trustworthy AI is the ability to say 'I'm not sure.'" — A.Q.U.A</p>
-    </footer>
   </div>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__grid">
+        <div>
+          <h3>On this page</h3>
+          <ul>
+            <li><a href="#problem">The Problem</a></li>
+            <li><a href="#capabilities">What A.Q.U.A Does</a></li>
+            <li><a href="#principles">Core Principles</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#shadow">Shadow integration</a></li>
+            <li><a href="#roadmap">Roadmap</a></li>
+            <li><a href="#purpose">Purpose</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Repository</h3>
+          <ul>
+            <li><a href="https://github.com/ElaMCB/AQUA">AQUA on GitHub</a></li>
+            <li><a href="https://github.com/ElaMCB/AQUA/blob/main/README.md">README</a></li>
+            <li><a href="https://github.com/ElaMCB/AQUA/blob/main/LICENSE">License</a></li>
+            <li><a href="https://github.com/ElaMCB/AQUA/blob/main/docs/DEPLOY-AQUA-SHADOW.md">Deploy with Shadow</a></li>
+          </ul>
+          <span class="site-footer__badge">Open source · MIT</span>
+        </div>
+        <div>
+          <h3>Signal chain</h3>
+          <div class="site-footer__chain">
+            <a href="https://github.com/ElaMCB/AQUA"><img src="https://img.shields.io/badge/A.Q.U.A-testing%20engine-0891b2?style=for-the-badge" alt="A.Q.U.A — testing engine"></a>
+            <span class="site-footer__arrow" aria-hidden="true">→</span>
+            <a href="https://github.com/ElaMCB/Hyper-Agent"><img src="https://img.shields.io/badge/Shadow-leadership%20layer-d4af37?style=for-the-badge" alt="Shadow — leadership layer"></a>
+          </div>
+          <p class="site-footer__signal">
+            Uncertainty-quantified scenarios flow into Shadow morning briefs.
+            <a href="https://github.com/ElaMCB/Hyper-Agent/blob/main/docs/INTEGRATION-AQUA.md">Integration docs →</a>
+          </p>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <p class="site-footer__views">
+          <a href="https://github.com/ElaMCB/AQUA/graphs/traffic" target="_blank" rel="noopener noreferrer">
+            <img src="https://visitor-badge.laobi.icu/badge?page_id=ElaMCB.AQUA&left_text=Views&left_color=041018&right_color=0891b2" alt="README views" width="120" height="20">
+          </a>
+        </p>
+        <p><a href="https://github.com/ElaMCB">ElaMereanu</a></p>
+        <p class="site-footer__meta">
+          Counter updates when the README is loaded (approximate; includes bots).
+          Repo owners: <a href="https://github.com/ElaMCB/AQUA/graphs/traffic">Traffic</a>
+        </p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
